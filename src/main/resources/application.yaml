@@ -1,0 +1,27 @@
+
+spring:
+  r2dbc:
+    url: r2dbc:mysql://aos-mysql.dev.svc.cluster.local:3306/multiple_factor?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: PhLBNTUgbJiiTYcwrt1O
+  data:
+    redis:
+      host: 172.10.0.27
+      port: 30013
+      password: YFKUDeCWD1AL3pGnxHtVoAf3dcwcrTgL
+
+logging:
+  level:
+    org:
+      springframework:
+        r2dbc: DEBUG
+server:
+  port: 8081
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    groups:
+      enabled: true
+  show-actuator: true
