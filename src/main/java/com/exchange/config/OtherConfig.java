@@ -25,7 +25,7 @@ public class OtherConfig {
 
     @Bean
     public Converter<String, LocalDateTime> localDateTimeConverter() {
-        return new Converter<String, LocalDateTime>() {
+        return new Converter<>() {
             @Override
             public LocalDateTime convert(String source) {
                 return LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(source)), ZoneId.systemDefault());
