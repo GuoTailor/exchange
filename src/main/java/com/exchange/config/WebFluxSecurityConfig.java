@@ -6,17 +6,15 @@ import com.exchange.util.JwtUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.security.authentication.ReactiveAuthenticationManager;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -37,30 +35,25 @@ import reactor.core.publisher.Mono;
 public class WebFluxSecurityConfig {
     private final ObjectMapper json = new ObjectMapper();
 
-    @Autowired
-    ReactiveAuthenticationManager manager;
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-    /**
-     * 配置了默认表单登陆以及禁用了 csrf 功能，并开启了httpBasic 认证
-     */
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         return http
                 .cors().and()
                 .csrf().disable()
                 .httpBasic().disable()
+                .securityContextRepository(new TokenServerSecurityContextRepository())
                 .exceptionHandling()
-                .authenticationEntryPoint((ServerWebExchange exchange, AuthenticationException ex) -> {
+                .accessDeniedHandler((ServerWebExchange exchange, AccessDeniedException denied) -> {
                     ServerHttpResponse response = exchange.getResponse();
                     log.info("授权失败 {}", exchange.getRequest().getURI());
                     response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
                     try {
-                        return response.writeWith(Mono.just(response.bufferFactory().wrap(json.writeValueAsBytes(ResponseInfo.failed(ex.getMessage())))));
+                        return response.writeWith(Mono.just(response.bufferFactory().wrap(json.writeValueAsBytes(ResponseInfo.failed(denied.getMessage())))));
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }
@@ -97,7 +90,6 @@ public class WebFluxSecurityConfig {
                 .pathMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyExchange().authenticated()
                 .and()
-                .addFilterAt(new JWTAuthenticationFilter(), SecurityWebFiltersOrder.AUTHORIZATION)
                 .build();
     }
 

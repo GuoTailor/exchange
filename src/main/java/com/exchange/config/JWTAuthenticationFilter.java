@@ -5,13 +5,9 @@ import com.exchange.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.core.log.LogMessage;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.server.authorization.AuthorizationWebFilter;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.server.ServerWebExchange;
@@ -45,10 +41,7 @@ public class JWTAuthenticationFilter implements WebFilter {
                     return ReactiveSecurityContextHolder.getContext().map(it -> {
                         it.setAuthentication(authentication);
                         return it;
-                    }).switchIfEmpty(Mono.fromFuture(() -> {
-
-                            }))
-                            .then();
+                    }).then();
                 }
             }
         }

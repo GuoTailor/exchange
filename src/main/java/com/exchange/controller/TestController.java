@@ -24,7 +24,7 @@ public class TestController {
     @Operation(summary = "获取所有商品", security = {@SecurityRequirement(name = "Authorization")})
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/test2")
-    public ResponseInfo<String> test2() {
-        return ResponseInfo.ok("hello");
+    public Mono<ResponseInfo<String>> test2() {
+        return Mono.just(ResponseInfo.ok("hello"));
     }
 }
