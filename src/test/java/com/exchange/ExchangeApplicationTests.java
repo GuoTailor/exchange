@@ -69,7 +69,7 @@ class ExchangeApplicationTests {
 
     @Test
     public void testDelete() {
-        Void block = closeOutTimeService.deleteCloseOutTime(1).block();
+        Integer block = closeOutTimeService.deleteCloseOutTime(1).block();
         System.out.println(block);
     }
 
