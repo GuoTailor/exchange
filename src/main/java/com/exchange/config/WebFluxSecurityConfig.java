@@ -1,5 +1,6 @@
 package com.exchange.config;
 
+import com.exchange.domain.Role;
 import com.exchange.domain.User;
 import com.exchange.dto.ResponseInfo;
 import com.exchange.util.JwtUtil;
@@ -12,7 +13,12 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.PathContainer;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -94,6 +100,19 @@ public class WebFluxSecurityConfig {
                 .anyExchange().authenticated()
                 .and()
                 .build();
+    }
+
+    /**
+     * 添加角色继承关系
+     *
+     * @return RoleHierarchy
+     */
+    @Bean
+    public RoleHierarchy roleHierarchy(DefaultMethodSecurityExpressionHandler methodSecurityExpressionHandler) {
+        var hierarchy = new RoleHierarchyImpl();
+        hierarchy.setHierarchy(Role.SUPER_ADMIN + " > " + Role.ADMIN + " > " + Role.USER);
+        methodSecurityExpressionHandler.setRoleHierarchy(hierarchy);
+        return hierarchy;
     }
 
 }

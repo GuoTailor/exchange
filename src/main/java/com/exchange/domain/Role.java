@@ -9,6 +9,13 @@ import org.springframework.security.core.GrantedAuthority;
  */
 @Data
 public class Role implements GrantedAuthority {
+    // 超级管理员
+    public static final String SUPER_ADMIN = "ROLE_SUPER_ADMIN";
+    // 管理员
+    public static final String ADMIN = "ROLE_ADMIN";
+    // 用户
+    public static final String USER = "ROLE_USER";
+
     @Id
     private Integer id;
     private String authority;

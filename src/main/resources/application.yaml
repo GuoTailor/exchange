@@ -6,22 +6,25 @@ spring:
     password: admin
   data:
     redis:
-      host: 172.10.0.27
-      port: 30013
-      password: YFKUDeCWD1AL3pGnxHtVoAf3dcwcrTgL
+      host: 127.0.0.1
+      port: 6379
 
 logging:
-  level:
-    org:
-      springframework:
-        r2dbc: DEBUG
+#  level:
+#    org.springframework.r2dbc: DEBUG
+  file:
+    path: log
+  logback:
+    rolling-policy:
+      clean-history-on-start: true
+      max-history: 7
+
 server:
   port: 8081
 
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
-  api-docs:
-    groups:
-      enabled: true
-  show-actuator: true
+    defaultModelExpandDepth: 4
+
+fileUploadPath: ./files
