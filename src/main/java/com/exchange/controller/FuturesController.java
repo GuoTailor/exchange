@@ -1,16 +1,21 @@
 package com.exchange.controller;
 
 import com.exchange.domain.Futures;
+import com.exchange.domain.TradingTime;
 import com.exchange.dto.FuturesAndTime;
 import com.exchange.dto.ResponseInfo;
+import com.exchange.dto.req.TradingTimeInstallReq;
+import com.exchange.dto.req.TradingTimeUpdateReq;
 import com.exchange.service.FuturesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
 import java.util.List;
 
@@ -52,4 +57,35 @@ public class FuturesController {
         return futuresService.deleteFutures(id).map(ResponseInfo::ok);
     }
 
+    @PostMapping("/time/update")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "修改期货的开盘时间", security = {@SecurityRequirement(name = "Authorization")})
+    public Mono<ResponseInfo<Tuple2<TradingTime, TradingTime>>> updateFuturesTime(@RequestBody @Valid TradingTimeUpdateReq timeReq) {
+        return futuresService.updateFuturesTime(timeReq).map(ResponseInfo::ok);
+    }
+
+    /**
+     * 添加期货的开盘时间
+     *
+     * @param timeReq 期货开盘时间
+     * @return 结果
+     */
+    @PostMapping("/time/add")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "添加期货的开盘时间", security = {@SecurityRequirement(name = "Authorization")})
+    public Mono<ResponseInfo<TradingTime>> addFuturesTime(@RequestBody @Valid TradingTimeInstallReq timeReq) {
+        return futuresService.addFuturesTime(timeReq).map(ResponseInfo::ok);
+    }
+
+    /**
+     * 删除期货开盘时间
+     *
+     * @param id id
+     */
+    @GetMapping("/time/delete")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "删除期货开盘时间", security = {@SecurityRequirement(name = "Authorization")})
+    public Mono<ResponseInfo<TradingTime>> deleteFuturesTime(@RequestParam Integer id) {
+        return futuresService.deleteFuturesTime(id).map(ResponseInfo::ok);
+    }
 }

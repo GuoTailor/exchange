@@ -35,6 +35,11 @@ public class FundAccountService {
     @Resource
     private FundRecordMapper fundRecordMapper;
 
+    public Mono<FundAccount> getBalance() {
+        return ReactiveSecurityContextHolder.getContext()
+                .map(it -> ((User) it.getAuthentication().getPrincipal()).getId())
+                .flatMap(it -> fundAccountMapper.findByUserId(it));
+    }
 
     /**
      * 充值

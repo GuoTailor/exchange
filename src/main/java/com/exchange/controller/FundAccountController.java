@@ -1,5 +1,6 @@
 package com.exchange.controller;
 
+import com.exchange.domain.FundAccount;
 import com.exchange.domain.FundRecord;
 import com.exchange.dto.PageInfo;
 import com.exchange.dto.ResponseInfo;
@@ -27,6 +28,13 @@ import java.math.BigDecimal;
 public class FundAccountController {
     @Autowired
     private FundAccountService fundAccountService;
+
+    @Operation(summary = "获取用户余额", security = {@SecurityRequirement(name = "Authorization")})
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/balance")
+    public Mono<ResponseInfo<FundAccount>> getBalance() {
+        return fundAccountService.getBalance().map(ResponseInfo::ok);
+    }
 
     /**
      * 充值

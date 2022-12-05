@@ -90,5 +90,11 @@ public class Futures {
 
     @Schema(description = "类型")
     private FuturesTypeEnum type;
+
+    @Schema(description = "简称")
+    private String abbreviation;
+
+    @Schema(description = "备注")
+    private String intro;
 }
 
