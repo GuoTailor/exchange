@@ -62,7 +62,7 @@ public class MarketService implements InitializingBean {
     }
 
     public void processMarkerMsg(GeneralMarket msg) {
-        RedisMarket redisMarket = new RedisMarket(msg.M() + msg.S(), msg.P(), msg.B1(), msg.S1(), LocalDateTime.now());
+        RedisMarket redisMarket = new RedisMarket(msg.M() + msg.S(), msg.P(), msg.B1(), msg.S1(), msg.ZF(), LocalDateTime.now());
         redisTemplate.opsForValue()
                 .set(redisMarket.getSymbol(), redisMarket)
                 .flatMap(it -> futuresMapper.findBySymbol(redisMarket.getSymbol()))

@@ -96,5 +96,8 @@ public class Futures {
 
     @Schema(description = "备注")
     private String intro;
+
+    @Schema(description = "颜色")
+    private String color;
 }
 

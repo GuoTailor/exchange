@@ -25,6 +25,8 @@ public class RedisMarket {
     private BigDecimal B1;
     //卖一
     private BigDecimal S1;
+    //单日涨幅
+    private BigDecimal ZF;
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime time;

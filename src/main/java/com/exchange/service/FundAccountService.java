@@ -38,7 +38,22 @@ public class FundAccountService {
     public Mono<FundAccount> getBalance() {
         return ReactiveSecurityContextHolder.getContext()
                 .map(it -> ((User) it.getAuthentication().getPrincipal()).getId())
-                .flatMap(it -> fundAccountMapper.findByUserId(it));
+                .flatMap(it -> fundAccountMapper.findByUserId(it)
+                        .switchIfEmpty(Mono.defer(() -> createAccount(it)))
+                );
+    }
+
+    /**
+     * 创建用户资金账户
+     *
+     * @param userId 用户id
+     * @return 结果
+     */
+    public Mono<FundAccount> createAccount(Integer userId) {
+        FundAccount account = new FundAccount();
+        account.setBalance(BigDecimal.ZERO);
+        account.setUserId(userId);
+        return fundAccountMapper.save(account);
     }
 
     /**

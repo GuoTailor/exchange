@@ -44,7 +44,7 @@ public class NettyClient {
      * @return {@link NettyServerHandler}
      */
     public Channel connect(MessageListener listener) throws InterruptedException, URISyntaxException {
-        URI websocketURI = new URI("ws://8.218.132.132:8804/connect/json/DA129524105744249DFD812D3594E91E");
+        URI websocketURI = new URI("ws://8.218.132.132:8804/connect/json/7BF1FE57DFC422D5981A95E69A321EE9");
         HttpHeaders httpHeaders = new DefaultHttpHeaders();
         //进行握手
         WebSocketClientHandshaker handshaker = WebSocketClientHandshakerFactory.newHandshaker(websocketURI, WebSocketVersion.V13, null, true, httpHeaders);

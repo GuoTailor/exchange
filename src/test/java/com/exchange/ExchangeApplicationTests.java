@@ -54,7 +54,7 @@ class ExchangeApplicationTests {
     @Test
     public void testRedis() {
         RedisMarket block = redisTemplate.opsForValue()
-                .set("test", new RedisMarket("helo", BigDecimal.valueOf(12.3), BigDecimal.valueOf(13.2), BigDecimal.valueOf(0.89), LocalDateTime.now()))
+                .set("test", new RedisMarket("helo", BigDecimal.valueOf(12.3), BigDecimal.valueOf(13.2), BigDecimal.valueOf(0.89), BigDecimal.valueOf(0.89), LocalDateTime.now()))
                 .flatMap(it -> redisTemplate.opsForValue().get("test"))
                 .cast(RedisMarket.class)
                 .block();

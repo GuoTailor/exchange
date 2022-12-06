@@ -1,5 +1,6 @@
 package com.exchange.service;
 
+import com.exchange.domain.FundAccount;
 import com.exchange.domain.User;
 import com.exchange.dto.resp.UserInfo;
 import com.exchange.mapper.FundAccountMapper;
@@ -18,6 +19,9 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
+import java.math.BigDecimal;
+import java.util.Objects;
+
 /**
  * create by GYH on 2022/10/28
  */
@@ -27,8 +31,8 @@ public class UserService implements ReactiveUserDetailsService {
     private UserMapper userMapper;
     @Resource
     private RealNameMapper realNameMapper;
-    @Resource
-    private FundAccountMapper fundAccountMapper;
+    @Autowired
+    private FundAccountService fundAccountService;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -44,10 +48,12 @@ public class UserService implements ReactiveUserDetailsService {
     }
 
     public Mono<User> register(User user) {
+        user.setId(null);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userMapper.save(user)
-                .zipWhen(it -> userMapper.saveUserRoleRelation(it.getId(), 1))
-                .map(Tuple2::getT1);
+                .flatMap(it -> userMapper.saveUserRoleRelation(it.getId(), 1))
+                .flatMap(it -> fundAccountService.createAccount(user.getId()))
+                .map(it -> user);
     }
 
     public Mono<Page<User>> getUsers(PageRequest pageRequest) {
@@ -71,10 +77,12 @@ public class UserService implements ReactiveUserDetailsService {
                     return userMapper.findById(it);
                 }).flatMap(it -> {
                     userInfo.setUsername(it.getUsername());
-                    return realNameMapper.isRealName(it.getId());
+                    return realNameMapper.isRealName(it.getId())
+                            .map(Objects::nonNull)
+                            .switchIfEmpty(Mono.just(false));
                 }).flatMap(it -> {
-                    userInfo.setRealName(it != null);
-                    return fundAccountMapper.findByUserId(userInfo.getId());
+                    userInfo.setRealName(it);
+                    return fundAccountService.getBalance();
                 }).map(it -> {
                     userInfo.setBalance(it.getBalance());
                     return userInfo;
