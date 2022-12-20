@@ -9,6 +9,9 @@ spring:
       host: 127.0.0.1
       port: 6379
 
+  webflux:
+    static-path-pattern: ./files
+
 logging:
 #  level:
 #    org.springframework.r2dbc: DEBUG
