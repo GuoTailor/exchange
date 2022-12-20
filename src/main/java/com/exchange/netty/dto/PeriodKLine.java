@@ -3,11 +3,6 @@ package com.exchange.netty.dto;
 import lombok.Data;
 import org.springframework.util.StringUtils;
 
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-
 /**
  * create by GYH on 2022/11/23
  */
@@ -16,32 +11,42 @@ public class PeriodKLine {
     /**
      * 时间 精确到秒
      */
-    private LocalDateTime takis;
+    private String takis;
+    /**
+     * 收
+     */
+    private String c;
     /**
      * 开
      */
-    private BigDecimal O;
+    private String o;
     /**
      * 高
      */
-    private BigDecimal H;
+    private String h;
     /**
      * 低
      */
-    private BigDecimal L;
+    private String l;
+    /**
+     * 额
+     */
+    private String a;
     /**
      * 量
      */
-    private Long V;
+    private String v;
 
     public PeriodKLine(String data) {
         if (StringUtils.hasText(data)) {
             String[] split = data.split(",");
-            takis = LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(split[0]) * 100), ZoneId.systemDefault());
-            O = new BigDecimal(split[1]);
-            H = new BigDecimal(split[2]);
-            L = new BigDecimal(split[3]);
-            V = Long.parseLong(split[4]);
+            takis = split[0] + "000";
+            c = split[1];
+            o = split[2];
+            h = split[3];
+            l = split[4];
+            a = split[5];
+            v = split[6];
         }
     }
 }

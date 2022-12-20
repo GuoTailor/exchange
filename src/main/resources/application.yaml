@@ -3,7 +3,7 @@ spring:
   r2dbc:
     url: r2dbc:mysql://localhost:3306/exchange
     username: root
-    password: yhl0717wltdatabase
+    password: admin
   data:
     redis:
       host: 127.0.0.1

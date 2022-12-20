@@ -8,6 +8,7 @@ import com.exchange.dto.req.TradingRecordPageReq;
 import com.exchange.dto.req.TradingReq;
 import com.exchange.enums.KLinePeriod;
 import com.exchange.netty.dto.PeriodKLine;
+import com.exchange.service.MarketHttpApiService;
 import com.exchange.service.MarketService;
 import com.exchange.service.TradingRecordService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,6 +33,8 @@ public class TradingController {
     private TradingRecordService tradingRecordService;
     @Autowired
     private MarketService marketService;
+    @Autowired
+    private MarketHttpApiService marketHttpApiService;
 
     /**
      * 买涨
@@ -70,7 +73,7 @@ public class TradingController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/kline")
     public Mono<ResponseInfo<List<PeriodKLine>>> getKLine(@RequestParam String symbol, @RequestParam KLinePeriod period) {
-        return marketService.getKLine(symbol, period).map(ResponseInfo::ok);
+        return marketHttpApiService.getKLine2(symbol, period).map(ResponseInfo::ok);
     }
 
     /**

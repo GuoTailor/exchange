@@ -17,8 +17,8 @@ public interface MarketHttpApi {
      * @return 数据
      */
     @GetExchange("/query/comkm4v2")
-    Mono<MarketResponse> getKLine(@RequestParam String date,
-                                  @RequestParam String period,
-                                  @RequestParam String symbol,
-                                  @RequestParam Integer withlast);
+    Mono<String> getKLine(@RequestParam String date,
+                          @RequestParam String period,
+                          @RequestParam String symbol,
+                          @RequestParam Integer withlast);
 }
