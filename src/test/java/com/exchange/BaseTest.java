@@ -1,5 +1,6 @@
 package com.exchange;
 
+import com.exchange.enums.KLinePeriod;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -30,5 +31,56 @@ public class BaseTest {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         System.out.println(objectMapper.writeValueAsString(duration));
+    }
+
+    @Test
+    public void testLocke() throws InterruptedException {
+        Thread t2 = new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            synchronized (KLinePeriod.LD) {
+                System.out.println("2 >>>> start");
+                KLinePeriod.LD.notifyAll();
+                System.out.println("2 >>>> sleep");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("2 >>>> end");
+            }
+        });
+
+        Thread thread = new Thread(() -> {
+            synchronized (KLinePeriod.LD) {
+                System.out.println("1 >>>> start");
+                try {
+                    t2.start();
+                    KLinePeriod.LD.wait();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("1 >>>> end");
+            }
+        });
+        thread.start();
+
+        Thread thread1 = new Thread(() -> {
+            synchronized (KLinePeriod.LD) {
+                System.out.println("3 >>>> start");
+                try {
+                    KLinePeriod.LD.wait();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("3 >>>> end");
+            }
+        });
+        thread1.start();
+        thread.join();
+        thread1.join();
     }
 }

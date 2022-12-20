@@ -44,7 +44,7 @@ public class NettyClient {
      * @return {@link NettyServerHandler}
      */
     public Channel connect(MessageListener listener) throws InterruptedException, URISyntaxException {
-        URI websocketURI = new URI("ws://8.218.132.132:8804/connect/json/7BF1FE57DFC422D5981A95E69A321EE9");
+        URI websocketURI = new URI("ws://8.212.21.207:8804/connect/json/BA5D28968C967A8A444BE72DF4FA6688");
         HttpHeaders httpHeaders = new DefaultHttpHeaders();
         //进行握手
         WebSocketClientHandshaker handshaker = WebSocketClientHandshakerFactory.newHandshaker(websocketURI, WebSocketVersion.V13, null, true, httpHeaders);
@@ -81,6 +81,12 @@ public class NettyClient {
 
     public void setMarkets(String markets) {
         this.markets = markets;
+    }
+
+    public void getKline(String symbol, String period, Integer num) {
+        TextWebSocketFrame frame = new TextWebSocketFrame("/reqk/" + symbol + "," + period + "," + num);
+        log.info("获取k线 {}", frame.text());
+        channel.writeAndFlush(frame);
     }
 
     public void subscribe() {

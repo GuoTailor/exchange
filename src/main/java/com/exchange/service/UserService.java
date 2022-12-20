@@ -1,9 +1,7 @@
 package com.exchange.service;
 
-import com.exchange.domain.FundAccount;
 import com.exchange.domain.User;
 import com.exchange.dto.resp.UserInfo;
-import com.exchange.mapper.FundAccountMapper;
 import com.exchange.mapper.RealNameMapper;
 import com.exchange.mapper.UserMapper;
 import jakarta.annotation.Resource;
@@ -17,9 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
