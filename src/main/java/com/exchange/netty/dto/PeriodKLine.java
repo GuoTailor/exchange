@@ -1,5 +1,6 @@
 package com.exchange.netty.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.util.StringUtils;
 
@@ -7,34 +8,42 @@ import org.springframework.util.StringUtils;
  * create by GYH on 2022/11/23
  */
 @Data
+@Schema(description = "k线")
 public class PeriodKLine {
     /**
-     * 时间 精确到秒
+     * 时间 毫秒
      */
+    @Schema(description = "时间 毫秒")
     private String takis;
     /**
      * 收
      */
+    @Schema(description = "收")
     private String c;
     /**
      * 开
      */
+    @Schema(description = "开")
     private String o;
     /**
      * 高
      */
+    @Schema(description = "高")
     private String h;
     /**
      * 低
      */
+    @Schema(description = "低")
     private String l;
     /**
      * 额
      */
+    @Schema(description = "额")
     private String a;
     /**
      * 量
      */
+    @Schema(description = "量")
     private String v;
 
     public PeriodKLine(String data) {
@@ -48,5 +57,8 @@ public class PeriodKLine {
             a = split[5];
             v = split[6];
         }
+    }
+
+    public PeriodKLine() {
     }
 }

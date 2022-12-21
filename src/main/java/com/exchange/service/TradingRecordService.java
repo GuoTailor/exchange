@@ -154,10 +154,10 @@ public class TradingRecordService {
                 })
                 .switchIfEmpty(Mono.error(new BusinessException("连接交易服务器失败1")))
                 // 判断止损金额是不是规定的金额
-                .filter(it -> tradingRecord.getStopLoss().compareTo(it.getStopLoss().multiply(tradesCount)) != 0)
+                .filter(it -> tradingRecord.getStopLoss().remainder(it.getStopLoss()).compareTo(BigDecimal.ZERO) == 0)
                 .switchIfEmpty(Mono.error(new BusinessException("不支持该止损金额 " + tradingRecord.getStopLoss())))
                 // 判断止盈金额是不是规定的金额
-                .filter(it -> tradingRecord.getStopProfit().compareTo(it.getStopProfit().multiply(tradesCount)) != 0)
+                .filter(it -> tradingRecord.getStopProfit().remainder(it.getStopProfit()).compareTo(BigDecimal.ZERO) == 0)
                 .switchIfEmpty(Mono.error(new BusinessException("不支持该止盈金额 " + tradingRecord.getStopProfit())))
                 // 判断交易次数
                 .filter(it -> tradesCountCache.contains(tradingRecord.getTradesCount()))

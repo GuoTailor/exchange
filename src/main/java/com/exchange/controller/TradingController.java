@@ -73,7 +73,7 @@ public class TradingController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/kline")
     public Mono<ResponseInfo<List<PeriodKLine>>> getKLine(@RequestParam String symbol, @RequestParam KLinePeriod period) {
-        return marketHttpApiService.getKLine2(symbol, period).map(ResponseInfo::ok);
+        return marketHttpApiService.getKLine(symbol, period).map(ResponseInfo::ok);
     }
 
     /**
