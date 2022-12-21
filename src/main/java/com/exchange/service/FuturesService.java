@@ -99,7 +99,7 @@ public class FuturesService implements InitializingBean {
                 .flatMap(it -> redisTemplate.opsForValue().get(it.getSymbol())
                         .cast(RedisMarket.class)
                         .map(redis -> {
-                            it.setIncrease(redis.getZF());
+                            it.setIncrease(redis.getZf());
                             return it;
                         }))
                 .collectList();
