@@ -25,6 +25,7 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 import reactor.util.function.Tuple2;
 
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -85,7 +86,7 @@ public class FuturesService implements InitializingBean {
     }
 
     public Mono<List<FuturesAndTime>> getAllAndTime() {
-        return futuresMapper.findAll()
+        return futuresMapper.findAllByEnabled(true)
                 .flatMap(it -> {
                     FuturesAndTime futuresAndTime = new FuturesAndTime();
                     BeanUtils.copyProperties(it, futuresAndTime);
@@ -99,14 +100,14 @@ public class FuturesService implements InitializingBean {
                 .flatMap(it -> redisTemplate.opsForValue().get(it.getSymbol())
                         .cast(RedisMarket.class)
                         .map(redis -> {
-                            it.setIncrease(redis.getZf());
+                            it.setIncrease(redis.getZf().setScale(2, RoundingMode.HALF_UP));
                             return it;
                         }))
                 .collectList();
     }
 
     public Mono<FuturesAndTime> findByIdAndTime(Integer id) {
-        return futuresMapper.findById(id)
+        return futuresMapper.findByIdAndEnabled(id, true)
                 .flatMap(it -> {
                     FuturesAndTime futuresAndTime = new FuturesAndTime();
                     BeanUtils.copyProperties(it, futuresAndTime);

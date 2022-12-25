@@ -29,7 +29,7 @@ public class TokenServerSecurityContextRepository implements ServerSecurityConte
             final String authToken = authHeader.replaceFirst("Bearer ", "");
             User user = JwtUtil.parseToken(authToken, new User());
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, "", user.getAuthorities());
-            log.info("authenticated user " + user.getUsername() + ", setting security context");
+//            log.info("authenticated user " + user.getUsername() + ", setting security context");
             return Mono.just(new SecurityContextImpl(authentication));
         }
         return Mono.empty();

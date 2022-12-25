@@ -1,4 +1,4 @@
-package com.exchange.netty.dto;
+package com.exchange.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -8,13 +8,12 @@ import org.springframework.util.StringUtils;
  * create by GYH on 2022/11/23
  */
 @Data
-@Schema(description = "k线")
 public class PeriodKLine {
     /**
      * 时间 毫秒
      */
-    @Schema(description = "时间 毫秒")
-    private String takis;
+    @Schema(description = "时间 秒")
+    private Long takis;
     /**
      * 收
      */
@@ -49,7 +48,7 @@ public class PeriodKLine {
     public PeriodKLine(String data) {
         if (StringUtils.hasText(data)) {
             String[] split = data.split(",");
-            takis = split[0] + "000";
+            takis = Long.parseLong(split[0]);
             c = split[1];
             o = split[2];
             h = split[3];

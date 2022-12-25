@@ -11,7 +11,7 @@ import com.exchange.mapper.FuturesMapper;
 import com.exchange.mapper.TradingRecordMapper;
 import com.exchange.netty.NettyClient;
 import com.exchange.netty.dto.GeneralMarket;
-import com.exchange.netty.dto.PeriodKLine;
+import com.exchange.dto.PeriodKLine;
 import com.exchange.util.ThreadManager;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;

@@ -99,5 +99,8 @@ public class Futures {
 
     @Schema(description = "颜色")
     private String color;
+
+    @Schema(description = "是否启用 true：启用")
+    private Boolean enabled;
 }
 

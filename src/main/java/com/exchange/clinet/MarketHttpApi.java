@@ -16,9 +16,18 @@ public interface MarketHttpApi {
      * @param period 周期
      * @return 数据
      */
-    @GetExchange("/query/comkm4v2")
+    @GetExchange("/query/comkmv2")
     Mono<String> getKLine(@RequestParam String date,
                           @RequestParam String period,
+                          @RequestParam Integer pidx,
+                          @RequestParam Integer psize,
                           @RequestParam String symbol,
                           @RequestParam Integer withlast);
+
+    @GetExchange("/query/indicator")
+    Mono<String> getIndicator(@RequestParam String args,
+                              @RequestParam String indkey,
+                              @RequestParam Integer outputcount,
+                              @RequestParam String period,
+                              @RequestParam String symbol);
 }

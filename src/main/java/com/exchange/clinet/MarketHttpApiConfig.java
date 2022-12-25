@@ -12,7 +12,7 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 @Configuration
 public class MarketHttpApiConfig {
 
-    private final static String appcode = "你自己的AppCode";
+    private final static String appcode = "500b33169b194612b02ce9ecc25a70e3";
 
     @Bean
     public MarketHttpApi marketHttpApi() {

@@ -1,13 +1,10 @@
 package com.exchange.controller;
 
 import com.exchange.domain.TradingRecord;
-import com.exchange.dto.PageInfo;
-import com.exchange.dto.RedisMarket;
-import com.exchange.dto.ResponseInfo;
+import com.exchange.dto.*;
 import com.exchange.dto.req.TradingRecordPageReq;
 import com.exchange.dto.req.TradingReq;
 import com.exchange.enums.KLinePeriod;
-import com.exchange.netty.dto.PeriodKLine;
 import com.exchange.service.MarketHttpApiService;
 import com.exchange.service.MarketService;
 import com.exchange.service.TradingRecordService;
@@ -72,7 +69,7 @@ public class TradingController {
     @Operation(summary = "获取k线数据", security = {@SecurityRequirement(name = "Authorization")})
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/kline")
-    public Mono<ResponseInfo<List<PeriodKLine>>> getKLine(@RequestParam String symbol, @RequestParam KLinePeriod period) {
+    public Mono<ResponseInfo<List<IndicatorInfo>>> getKLine(@RequestParam String symbol, @RequestParam KLinePeriod period) {
         return marketHttpApiService.getKLine(symbol, period).map(ResponseInfo::ok);
     }
 
