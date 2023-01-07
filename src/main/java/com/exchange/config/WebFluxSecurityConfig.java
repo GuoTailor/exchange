@@ -85,7 +85,7 @@ public class WebFluxSecurityConfig {
                     ServerHttpResponse response = webFilterExchange.getExchange().getResponse();
                     response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
                     try {
-                        return response.writeWith(Mono.just(response.bufferFactory().wrap(json.writeValueAsBytes(ResponseInfo.failed("用户名或密码错误")))));
+                        return response.writeWith(Mono.just(response.bufferFactory().wrap(json.writeValueAsBytes(ResponseInfo.failed(exception.getMessage())))));
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }
@@ -110,7 +110,7 @@ public class WebFluxSecurityConfig {
     @Bean
     public RoleHierarchy roleHierarchy(DefaultMethodSecurityExpressionHandler methodSecurityExpressionHandler) {
         var hierarchy = new RoleHierarchyImpl();
-        hierarchy.setHierarchy(Role.SUPER_ADMIN + " > " + Role.ADMIN + " > " + Role.USER);
+        hierarchy.setHierarchy(Role.SUPER_ADMIN + " > " + Role.ADMIN + " > " + Role.BUSINESS + " > " + Role.USER);
         methodSecurityExpressionHandler.setRoleHierarchy(hierarchy);
         return hierarchy;
     }

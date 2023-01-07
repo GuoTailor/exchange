@@ -5,12 +5,32 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class BaseTest {
+    String s = "1";
+
+    @Test
+    public void testReactor() throws InterruptedException {
+        Mono.just("1111")
+                .doOnNext(System.out::println)
+                .map(it -> {
+                    System.out.println(s);
+                    s = s + "1";
+                    return it;
+                })
+                .filter(it -> s.equals(it))
+                .switchIfEmpty(Mono.error(new RuntimeException("boom")))
+                .retry(1)
+                .subscribe(System.out::println, System.err::println);
+
+        Thread.sleep(2100);
+        System.out.println(">>>" + s);
+    }
+
     @Test
     public void testRecord() throws JsonProcessingException {
         var user = new User("nmka", 12);

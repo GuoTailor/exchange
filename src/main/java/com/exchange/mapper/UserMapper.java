@@ -2,7 +2,8 @@ package com.exchange.mapper;
 
 import com.exchange.domain.Role;
 import com.exchange.domain.User;
-import org.springframework.data.domain.Pageable;
+import com.exchange.dto.req.UserInfoPageReq;
+import com.exchange.dto.resp.UserInfo;
 import org.springframework.data.r2dbc.repository.Modifying;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
@@ -24,6 +25,10 @@ public interface UserMapper extends R2dbcRepository<User, Integer> {
     @Modifying
     Mono<Integer> saveUserRoleRelation(Integer userId, Integer roleId);
 
-    @Query("delete from user where username = 'sad'")
-    Flux<User> findAllBy(Pageable pageable);
+    @Query("select u.*, rn.state, fa.balance" +
+            " from user u" +
+            " left join real_name rn on u.id = rn.user_id" +
+            " left join fund_account fa on u.id = fa.user_id" +
+            " where u.enable = :#{[0].enable}")
+    Flux<UserInfo> findAllByPage(UserInfoPageReq pageReq);
 }

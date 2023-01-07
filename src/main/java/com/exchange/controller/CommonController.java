@@ -41,12 +41,6 @@ public class CommonController {
         return userService.register(user).map(ResponseInfo::ok);
     }
 
-    @PostMapping("getAll")
-    @PreAuthorize("hasRole('ADMIN')")
-    public Mono<Page<User>> getAll(@RequestBody PageRequest pageRequest) {
-        return userService.getUsers(pageRequest);
-    }
-
     @Operation(summary = "文件上传", security = {@SecurityRequirement(name = "Authorization")})
     @PreAuthorize("hasRole('USER')")
     @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})

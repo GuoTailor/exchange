@@ -1,6 +1,7 @@
 package com.exchange.service;
 
 import com.exchange.domain.User;
+import com.exchange.dto.req.UserInfoPageReq;
 import com.exchange.dto.resp.UserInfo;
 import com.exchange.mapper.RealNameMapper;
 import com.exchange.mapper.UserMapper;
@@ -14,8 +15,11 @@ import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -46,17 +50,12 @@ public class UserService implements ReactiveUserDetailsService {
     public Mono<User> register(User user) {
         user.setId(null);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setEnable(true);
+        user.setCreateTime(LocalDateTime.now());
         return userMapper.save(user)
                 .flatMap(it -> userMapper.saveUserRoleRelation(it.getId(), 1))
                 .flatMap(it -> fundAccountService.createAccount(user.getId()))
                 .map(it -> user);
-    }
-
-    public Mono<Page<User>> getUsers(PageRequest pageRequest) {
-        return userMapper.findAllBy(pageRequest)
-                .collectList()
-                .zipWith(userMapper.count())
-                .map(it -> new PageImpl<>(it.getT1(), pageRequest, it.getT2()));
     }
 
     /**
@@ -83,5 +82,13 @@ public class UserService implements ReactiveUserDetailsService {
                     userInfo.setBalance(it.getBalance());
                     return userInfo;
                 });
+    }
+
+    public Flux<UserInfo> getUserListByPage(UserInfoPageReq pageReq) {
+        return userMapper.findAllByPage(pageReq);
+    }
+
+    public Mono<Void> deleteUserById(Integer id) {
+        return userMapper.deleteById(id);
     }
 }

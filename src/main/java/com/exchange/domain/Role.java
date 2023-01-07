@@ -13,6 +13,7 @@ public class Role implements GrantedAuthority {
     public static final String SUPER_ADMIN = "ROLE_SUPER_ADMIN";
     // 管理员
     public static final String ADMIN = "ROLE_ADMIN";
+    public static final String BUSINESS = "ROLE_BUSINESS";
     // 用户
     public static final String USER = "ROLE_USER";
 

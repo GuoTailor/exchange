@@ -7,9 +7,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * create by GYH on 2022/10/27
@@ -23,6 +26,13 @@ public class User implements UserDetails {
     private String password;
     @Transient
     private List<Role> roles;
+    private Boolean enable;
+    private LocalDateTime createTime;
+
+    public List<String> getStringRoles() {
+        if (CollectionUtils.isEmpty(roles)) return List.of();
+        return roles.stream().map(Role::getAuthority).collect(Collectors.toList());
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -60,6 +70,6 @@ public class User implements UserDetails {
     @JsonIgnore
     @Override
     public boolean isEnabled() {
-        return true;
+        return enable;
     }
 }

@@ -6,7 +6,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.util.CollectionUtils;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
@@ -88,10 +87,7 @@ public class JwtUtil {
         Claims claims = Jwts.claims();
         claims.put("id", u.getId());
         claims.put("username", u.getUsername());
-        List<Role> roles = u.getRoles();
-        if (!CollectionUtils.isEmpty(roles)) {
-            claims.put("roles", roles.stream().map(Role::getAuthority).collect(Collectors.toList()));
-        }
+        claims.put("roles", u.getStringRoles());
         long now = System.currentTimeMillis();
         return Jwts.builder()
                 .setIssuedAt(new Date(now))
